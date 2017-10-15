@@ -154,7 +154,14 @@ function! s:Highlight(args) "{{{
     return
   endif
 
-  let @/ = matchstr(a:args, "\\v(-)\@<!(\<)\@<=\\w+|['\"]\\zs.{-}\\ze['\"]")
+  let q = matchstr(a:args, "\\v(-)\@<!(\<)\@<=\\w+|['\"]\\zs.{-}\\ze['\"]")
+
+  " poor man's one-off smartcase (matching ag's default --smart-case)
+  if q !~# '[A-Z]'
+      let q = q . '\c'
+  endif
+
+  let @/ = q
   call feedkeys(":let &hlsearch=1 \| echo \<CR>", "n")
 endfunction "}}}
 
